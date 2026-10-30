@@ -14,6 +14,7 @@ Desktop CEA is a graphical interface for rocket chemical equilibrium calculation
 https://github.com/NathRepo19/Desktop-CEA/releases/latest).
 * Under Assets, select the `.exe` file and double-click it to launch Desktop CEA.
 * Standalone application for Windows 11 (64-bit). No Python installation required.
+* [User guide](docs/guide.md)
 
 ## Features
 
