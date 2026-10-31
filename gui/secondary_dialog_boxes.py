@@ -454,6 +454,7 @@ class SweepDisplayTab(QDialog):
         self.find_max_button = QPushButton("Find Maxima")
         self.plot_button_layout.addWidget(self.find_max_button)
         self.find_max_button.clicked.connect(self.find_max_wrap)
+        self.find_max_button.setEnabled(False)
 
         self.save_plot = QPushButton("Save this Graph")
         self.plot_button_layout.addWidget(self.save_plot)
@@ -508,7 +509,7 @@ class SweepDisplayTab(QDialog):
         return widget_object
 
     def make_the_plot(self):
-       
+        self.find_max_button.setEnabled(True)    
         self.sc.axis.clear()
 
         if self.of_radio.isChecked():
@@ -702,6 +703,7 @@ class SweepDisplayTab(QDialog):
         
     def find_max_wrap(self):
         y_val_str = self.y_axis.currentText()
+        self.find_max_button.setEnabled(False)
         if y_val_str == self.basic_output_list[0]:
             y_array = self.c_star_val
         if y_val_str == self.basic_output_list[1]:
@@ -750,6 +752,7 @@ class SweepDisplayTab(QDialog):
             bbox=dict(boxstyle='round,pad=0.3', fc='none', alpha=1) 
         )
             self.sc.draw_idle()
+            #self.find_max_button.setEnabled(False)
 
     
     def fun_save_sweep_csv(self):
