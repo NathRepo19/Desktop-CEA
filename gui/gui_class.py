@@ -6,7 +6,7 @@ from solver.propellants_list import OXIDIZERS,FUELS
 
 
 
-from gui.tab_definitions import MonoPropTab,BiPropTab
+from gui.tab_definitions import MonoPropTab,BiPropTab,AddNewProp
 
 
 class MainWindow(QMainWindow):
@@ -18,6 +18,7 @@ class MainWindow(QMainWindow):
 
         self.tab1 = MonoPropTab()
         self.tab2 = BiPropTab()
+        self.tab3 = AddNewProp()
 
         # if self.tab1.calc_choice_instance.user_extra_outputs == 1:
         #     self.tabs.setTabEnabled(1,False)
@@ -27,6 +28,7 @@ class MainWindow(QMainWindow):
         # # Add the instantiated views into the tab layout
         self.tabs.addTab(self.tab1, "Monopropellant")
         self.tabs.addTab(self.tab2, "Bipropellant")
+        self.tabs.addTab(self.tab3,"Add Custom Propellant")
 
     # Function that activates once user tries to change tabs. It checks if the user has the output dialog popup open to decide whether to let user change tabs
     def on_tab_changed(self):

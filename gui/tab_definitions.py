@@ -74,4 +74,12 @@ class MonoPropTab(QWidget):
 
         
         
- 
+
+
+class AddNewProp(QWidget):
+
+    def __init__(self):
+        super().__init__()
+        self.layout = QFormLayout(self)
+        button1 = QPushButton("Test_button")
+        self.layout.addWidget(button1)
