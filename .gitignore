@@ -3,3 +3,5 @@
 *.csv
 build/
 dist/
+.build-tools/
+/build-windows.log

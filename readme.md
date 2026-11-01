@@ -10,8 +10,7 @@ Desktop CEA is a graphical interface for rocket chemical equilibrium calculation
 
 ## Download for Windows
 
-* Download the Windows executable from the [latest release](
-https://github.com/NathRepo19/Desktop-CEA/releases/tag/v0.1.0).
+* Download the Windows executable from the [latest release](https://github.com/NathRepo19/Desktop-CEA/releases/tag/v0.1.1).
 * Under Assets, select the `.exe` file and double-click it to launch Desktop CEA.
 * Standalone application for Windows 11 (64-bit). No Python installation required.
 * [User guide](docs/guide.md)
@@ -29,6 +28,17 @@ https://github.com/NathRepo19/Desktop-CEA/releases/tag/v0.1.0).
 ```bash
 python main.py
 ```
+
+To build a single Windows executable with the application icon embedded, run
+these commands on Windows with the dependencies below installed:
+
+```powershell
+python -m pip install pyinstaller
+python -m PyInstaller --noconfirm "Desktop CEA.spec"
+```
+
+The executable is written to `dist/Desktop CEA.exe`. The build bundles the
+window icon, RocketCEA data files, and the Qt plotting backend.
 
 ## Dependencies
 
