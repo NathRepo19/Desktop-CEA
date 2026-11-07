@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QWidget, QFormLayout, QComboBox, QPushButton, QDoubleSpinBox, QRadioButton, QTextEdit,QLabel,QVBoxLayout,QGridLayout,QGroupBox,QHBoxLayout,QDialog
+import sys
+from PySide6.QtWidgets import QWidget, QFormLayout, QComboBox, QPushButton, QDoubleSpinBox, QRadioButton, QLineEdit,QLabel,QVBoxLayout,QGridLayout,QGroupBox,QHBoxLayout,QDialog
 from PySide6.QtCore import Qt
 from solver.calc_engine import compute_val,mono_prop_compute_val
 from solver.propellants_list import OXIDIZERS,FUELS,MONOPROPS
@@ -81,5 +82,60 @@ class AddNewProp(QWidget):
     def __init__(self):
         super().__init__()
         self.layout = QFormLayout(self)
-        button1 = QPushButton("Test_button")
-        self.layout.addWidget(button1)
+        
+        self.add_prop_container = QWidget()
+        self.add_prop_layout = QHBoxLayout(self.add_prop_container)
+
+        self.add_element_container = QWidget()
+        self.add_element_layout = QGridLayout(self.add_element_container)
+
+        self.add_element_letter = QLineEdit()
+        self.add_element_letter.setMaximumWidth(80)
+        self.add_element_num = QDoubleSpinBox() 
+        self.add_element_num.setDecimals(1)
+        self.add_element_num.setMaximumWidth(80)
+        self.add_more_elements = QPushButton("ADD")
+        self.add_more_elements.setMaximumWidth(60)
+        self.element_lbl_1 = QLabel("Element Symbol")
+        self.element_lbl_1.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.element_lbl_2 = QLabel("Number of atoms")
+        self.element_lbl_2.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
+        self.add_element_layout.addWidget(self.element_lbl_1,0,0,Qt.AlignmentFlag.AlignHCenter)
+        self.add_element_layout.addWidget(self.add_element_letter,1,0,Qt.AlignmentFlag.AlignHCenter)
+        self.add_element_layout.addWidget(self.element_lbl_2,0,1,Qt.AlignmentFlag.AlignHCenter)
+        self.add_element_layout.addWidget(self.add_element_num,1,1,Qt.AlignmentFlag.AlignHCenter)
+        self.add_element_layout.addWidget(self.add_more_elements,1,2,Qt.AlignmentFlag.AlignHCenter)
+
+        # self.add_element_layout.addWidget(self.add_element_letter)
+        # self.add_element_layout.addWidget(self.add_element_num)
+
+        
+        self.add_fuel = QPushButton("Add as fuel")
+        self.add_ox = QPushButton("Add as Oxidizer")
+        self.add_mono = QPushButton("Add as Monopropellant")
+        self.add_prop_layout.addWidget(self.add_fuel)
+        self.add_prop_layout.addWidget(self.add_ox)
+        self.add_prop_layout.addWidget(self.add_mono)
+        
+
+        self.prop_name = QLineEdit()
+        self.prop_formula = QLineEdit()
+        self.prop_enthalpy = QDoubleSpinBox()
+        self.prop_enthalpy.setDecimals(2)
+        self.prop_enthalpy.setRange(-sys.float_info.max,sys.float_info.max)
+        # self.input_of.setRange(0.1,100) # Acceptable input range 
+        # self.input_of.setDecimals(2) # Accuracy upto two digits after decimal 
+        # self.input_of.setSingleStep(0.1)
+        # self.input_of.setValue(2.5) # Default O/F ratio 
+
+
+
+        self.layout.addRow("Enter propellant name",self.prop_name)
+        self.layout.addRow("Enter propellant chemical formula",self.prop_formula)
+        self.layout.addRow("Enter formation enthalpy in cal/mol",self.prop_enthalpy)
+        self.layout.addRow(self.add_element_container)
+        self.layout.addRow(self.add_prop_container)
+
+        # button1 = QPushButton("Test_button")
+        # self.layout.addWidget(button1)
