@@ -96,6 +96,10 @@ class AddNewProp(QWidget):
         self.add_element_num.setMaximumWidth(80)
         self.add_more_elements = QPushButton("ADD")
         self.add_more_elements.setMaximumWidth(60)
+        self.add_more_elements.clicked.connect(self.add_element_func)
+        self.delete_elements = QPushButton("DEL")
+        self.delete_elements.setMaximumWidth(60)
+        self.delete_elements.clicked.connect(self.del_element_func)
         self.element_lbl_1 = QLabel("Element Symbol")
         self.element_lbl_1.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.element_lbl_2 = QLabel("Number of atoms")
@@ -106,6 +110,7 @@ class AddNewProp(QWidget):
         self.add_element_layout.addWidget(self.element_lbl_2,0,1,Qt.AlignmentFlag.AlignHCenter)
         self.add_element_layout.addWidget(self.add_element_num,1,1,Qt.AlignmentFlag.AlignHCenter)
         self.add_element_layout.addWidget(self.add_more_elements,1,2,Qt.AlignmentFlag.AlignHCenter)
+        self.add_element_layout.addWidget(self.delete_elements,1,3,Qt.AlignmentFlag.AlignHCenter)
 
         # self.add_element_layout.addWidget(self.add_element_letter)
         # self.add_element_layout.addWidget(self.add_element_num)
@@ -124,10 +129,6 @@ class AddNewProp(QWidget):
         self.prop_enthalpy = QDoubleSpinBox()
         self.prop_enthalpy.setDecimals(2)
         self.prop_enthalpy.setRange(-sys.float_info.max,sys.float_info.max)
-        # self.input_of.setRange(0.1,100) # Acceptable input range 
-        # self.input_of.setDecimals(2) # Accuracy upto two digits after decimal 
-        # self.input_of.setSingleStep(0.1)
-        # self.input_of.setValue(2.5) # Default O/F ratio 
 
 
 
@@ -139,3 +140,34 @@ class AddNewProp(QWidget):
 
         # button1 = QPushButton("Test_button")
         # self.layout.addWidget(button1)
+        self.element_name_list = []
+        self.element_num_list = []
+        self.element_row_counter = 1
+    
+    def add_element_func(self):
+        self.element_row_counter = self.element_row_counter + 1 
+        element_holder = QLineEdit() 
+        element_holder.setMaximumWidth(80)
+        
+        element_num_holder = QDoubleSpinBox() 
+        element_num_holder.setDecimals(1)
+        element_num_holder.setMaximumWidth(80)
+
+        self.add_element_layout.addWidget(element_holder,self.element_row_counter,0,Qt.AlignmentFlag.AlignHCenter)
+        self.add_element_layout.addWidget(element_num_holder,self.element_row_counter,1,Qt.AlignmentFlag.AlignHCenter)
+        
+        self.element_name_list.append(element_holder)
+        self.element_num_list.append(element_num_holder)
+
+    def del_element_func(self):
+        if self.element_row_counter > 1:
+            self.element_row_counter = self.element_row_counter - 1
+        
+        deleted_element = self.element_name_list.pop()
+        deleted_element_num = self.element_num_list.pop()
+
+        self.add_element_layout.removeWidget(deleted_element)
+        deleted_element.deleteLater()
+        self.add_element_layout.removeWidget(deleted_element_num)
+        deleted_element_num.deleteLater()
+
