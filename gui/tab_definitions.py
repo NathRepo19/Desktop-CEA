@@ -188,6 +188,7 @@ class AddNewProp(QWidget):
         for symbol, num in zip(self.element_name_list,self.element_num_list):
             elem_symb_temp = symbol.text()
             elem_num_temp = str(num.value())
-            res_temp = res_temp + " " + elem_symb_temp + " " + elem_num_temp
+            if elem_symb_temp:
+                res_temp = res_temp + " " + elem_symb_temp + " " + elem_num_temp
 
         print(res_temp)
