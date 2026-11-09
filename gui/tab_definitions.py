@@ -202,10 +202,13 @@ class AddNewProp(QWidget):
         button_txt = send_button.text()
         if button_txt == "Add as fuel":
             str_lead = "fuel"
+            ch = 3
         elif button_txt == "Add as Oxidizer":
             str_lead = "oxid"
+            ch = 2
         elif button_txt == "Add as Monopropellant":
-            str_lead = "name" 
+            str_lead = "name"
+            ch = 1 
         
         str_formula = self.prop_formula.text().strip()
         str_cal = str(self.prop_enthalpy.value())
