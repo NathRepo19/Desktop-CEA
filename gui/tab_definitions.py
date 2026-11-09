@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import QWidget, QFormLayout, QComboBox, QPushButton, QDoubleSpinBox, QRadioButton, QLineEdit,QLabel,QVBoxLayout,QGridLayout,QGroupBox,QHBoxLayout,QDialog
+from PySide6.QtWidgets import QWidget, QFormLayout, QComboBox, QMessageBox,QPushButton, QDoubleSpinBox, QRadioButton, QLineEdit,QLabel,QVBoxLayout,QGridLayout,QGroupBox,QHBoxLayout,QDialog
 from PySide6.QtCore import Qt
 from solver.calc_engine import compute_val,mono_prop_compute_val
 from solver.propellants_list import OXIDIZERS,FUELS,MONOPROPS
@@ -128,7 +128,9 @@ class AddNewProp(QWidget):
         self.add_fuel = QPushButton("Add as fuel")
         self.add_fuel.clicked.connect(self.construct_string)
         self.add_ox = QPushButton("Add as Oxidizer")
+        self.add_ox.clicked.connect(self.construct_string)
         self.add_mono = QPushButton("Add as Monopropellant")
+        self.add_mono.clicked.connect(self.construct_string)
         self.add_prop_layout.addWidget(self.add_fuel)
         self.add_prop_layout.addWidget(self.add_ox)
         self.add_prop_layout.addWidget(self.add_mono)
@@ -139,12 +141,24 @@ class AddNewProp(QWidget):
         self.prop_enthalpy = QDoubleSpinBox()
         self.prop_enthalpy.setDecimals(2)
         self.prop_enthalpy.setRange(-sys.float_info.max,sys.float_info.max)
+        self.ref_temp = QDoubleSpinBox()
+        self.ref_temp.setDecimals(2)
+        self.ref_temp.setRange(0,5000)
+        self.ref_temp.setValue(298.15)
+        self.ref_temp.setSuffix("K")
+        self.prop_rho = QDoubleSpinBox()
+        self.prop_rho.setDecimals(2)
+        self.prop_rho.setRange(0,20) # Setting the density input limit to 20 g/cc or 20 tons/m3.
+        self.prop_rho.setSuffix("g/cc")
 
+        
 
         # Add everything to main layout, including the two containers
         self.layout.addRow("Enter propellant name",self.prop_name)
         self.layout.addRow("Enter propellant chemical formula",self.prop_formula)
         self.layout.addRow("Enter formation enthalpy in cal/mol",self.prop_enthalpy)
+        self.layout.addRow("Enter Reference Temperature in K",self.ref_temp)
+        self.layout.addRow("Enter density in g/cc (optional)",self.prop_rho)
         self.layout.addRow(self.add_element_container)
         self.layout.addRow(self.add_prop_container)
 
@@ -184,6 +198,23 @@ class AddNewProp(QWidget):
         deleted_element_num.deleteLater()
     
     def construct_string(self):
+        send_button = self.sender() 
+        button_txt = send_button.text()
+        if button_txt == "Add as fuel":
+            str_lead = "fuel"
+        elif button_txt == "Add as Oxidizer":
+            str_lead = "oxid"
+        elif button_txt == "Add as Monopropellant":
+            str_lead = "name" 
+        
+        str_formula = self.prop_formula.text().strip()
+        str_cal = str(self.prop_enthalpy.value())
+        str_ref_temp = str(self.ref_temp.value())
+        if self.prop_rho.value() > 0: 
+            str_rho = str(self.prop_rho.value())
+        else:
+            str_rho = ""
+
         res_temp = ""
         for symbol, num in zip(self.element_name_list,self.element_num_list):
             elem_symb_temp = symbol.text()
@@ -191,4 +222,11 @@ class AddNewProp(QWidget):
             if elem_symb_temp:
                 res_temp = res_temp + " " + elem_symb_temp + " " + elem_num_temp
 
-        print(res_temp)
+        if str_rho: 
+            str_rho_add = "rho.g/cc=" + str_rho
+        else:
+            str_rho_add= ""
+        
+        final_str = str_lead + " " + str_formula + res_temp + " " + "wt%=100.00" + " " + "h,cal=" + str_cal + " " + "t(k)=" + str_ref_temp + " " + str_rho_add
+        final_str = final_str.strip()
+        print(final_str)

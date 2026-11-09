@@ -1,9 +1,16 @@
 from dataclasses import replace
-from rocketcea.cea_obj import CEA_Obj
+from rocketcea.cea_obj import CEA_Obj, add_new_fuel, add_new_oxidizer, add_new_propellant
 from solver.data_class_custom import CalcSet,ChoiceSet
 
 
-
+def new_prop_add(name_str,card_st,ch):
+    if ch == 1: 
+        add_new_propellant(name_str,card_st)
+    if ch == 2: 
+        add_new_oxidizer(name_str,card_st)
+    if ch == 3: 
+        add_new_fuel(name_str,card_st)
+        
 # Define calculation function 
 def compute_val(calc: CalcSet, calc_ch:ChoiceSet): 
     """Return calculated results without modifying the supplied inputs.
