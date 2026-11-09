@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import QWidget, QFormLayout, QComboBox, QMessageBox,QPushButton, QDoubleSpinBox, QRadioButton, QLineEdit,QLabel,QVBoxLayout,QGridLayout,QGroupBox,QHBoxLayout,QDialog
 from PySide6.QtCore import Qt
-from solver.calc_engine import compute_val,mono_prop_compute_val
+from solver.calc_engine import compute_val,mono_prop_compute_val,new_prop_add
 from solver.propellants_list import OXIDIZERS,FUELS,MONOPROPS
 from solver.data_class_custom import CalcSet,ChoiceSet
 #from gui.secondary_dialog_boxes import AddExtraOutputs,OutputDisplayTab
@@ -79,10 +79,12 @@ class MonoPropTab(QWidget):
 
 class AddNewProp(QWidget):
 
-    def __init__(self):
+    def __init__(self,mono_tab,bi_tab):
         super().__init__()
         self.layout = QFormLayout(self)
 
+        self.mono_tab = mono_tab
+        self.bi_tab = bi_tab
         ## Container for add_fuel, add_ox and add_prop buttons
         self.add_prop_container = QWidget()
         self.add_prop_layout = QHBoxLayout(self.add_prop_container)
@@ -210,9 +212,21 @@ class AddNewProp(QWidget):
             str_lead = "name"
             ch = 1 
         
-        str_formula = self.prop_formula.text().strip()
+        
+        if self.prop_formula.text():
+            str_formula = self.prop_formula.text().strip()
+        else:
+            QMessageBox.warning(self,"Missing Information","Please enter the chemical formula of your custom propellant")
+            return
+        
         str_cal = str(self.prop_enthalpy.value())
         str_ref_temp = str(self.ref_temp.value())
+        if self.prop_name.text():
+            self.custom_prop_name = self.prop_name.text().strip() # I may need to access this later 
+        else:
+            QMessageBox.warning(self,"Missing Information","Please enter name of your custom propellant")
+            return
+        
         if self.prop_rho.value() > 0: 
             str_rho = str(self.prop_rho.value())
         else:
@@ -232,4 +246,20 @@ class AddNewProp(QWidget):
         
         final_str = str_lead + " " + str_formula + res_temp + " " + "wt%=100.00" + " " + "h,cal=" + str_cal + " " + "t(k)=" + str_ref_temp + " " + str_rho_add
         final_str = final_str.strip()
-        print(final_str)
+
+
+        current_list_ox = [self.bi_tab.OxBox.itemText(i) for i in range(self.bi_tab.OxBox.count())]
+        current_list_fuel = [self.bi_tab.FuBox.itemText(i) for i in range(self.bi_tab.FuBox.count())]
+        current_list_mono_prop = [self.mono_tab.mono_prop_box.itemText(i) for i in range(self.mono_tab.mono_prop_box.count())]
+        new_prop_add(self.custom_prop_name,final_str,ch)
+        if ch == 1:
+            if self.custom_prop_name not in current_list_mono_prop:
+                self.mono_tab.mono_prop_box.addItem(self.custom_prop_name)
+        elif ch == 2:
+            if self.custom_prop_name not in current_list_ox:
+                self.bi_tab.OxBox.addItem(self.custom_prop_name)
+        elif ch == 3: 
+            if self.custom_prop_name not in current_list_fuel:
+                self.bi_tab.FuBox.addItem(self.custom_prop_name)
+        
+        # print(final_str)

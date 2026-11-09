@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
 
         self.tab1 = MonoPropTab()
         self.tab2 = BiPropTab()
-        self.tab3 = AddNewProp()
+        self.tab3 = AddNewProp(self.tab1,self.tab2)
 
         # if self.tab1.calc_choice_instance.user_extra_outputs == 1:
         #     self.tabs.setTabEnabled(1,False)
