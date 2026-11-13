@@ -1,6 +1,6 @@
 
 from gui.secondary_dialog_boxes import AddExtraOutputs, OutputDisplayTab, SweepDisplayTab
-from PySide6.QtWidgets import QDialog,QTextEdit,QFormLayout,QInputDialog
+from PySide6.QtWidgets import QDialog,QTextEdit,QFormLayout,QInputDialog,QGroupBox,QHBoxLayout,QVBoxLayout,QGridLayout,QPushButton,QLabel,QComboBox,QWidget
 from solver.calc_engine import compute_val,mono_prop_compute_val
 from PySide6.QtCore import Qt
 from solver.data_class_custom import CalcSet
@@ -250,5 +250,6 @@ def fun_save_csv(self):
                     writer.writerow([row_label,value])
 
     self.Calc_button_3.setEnabled(False)
+
 
 

@@ -5,7 +5,7 @@ from solver.calc_engine import compute_val,mono_prop_compute_val,new_prop_add
 from solver.propellants_list import OXIDIZERS,FUELS,MONOPROPS
 from solver.data_class_custom import CalcSet,ChoiceSet
 #from gui.secondary_dialog_boxes import AddExtraOutputs,OutputDisplayTab
-from gui.mono_widgets import drop_down_widgets, button_widgets, input_box_widgets, output_box_widgets, radio_widgets,button_widget_set_2
+from gui.mono_widgets import drop_down_widgets, button_widgets, input_box_widgets, output_box_widgets, radio_widgets,button_widget_set_2,AddPropCombo
 from gui.helpers import set_field_visibility,add_output_func,exit_radio_control_function,mono_func_button,create_add_output,func_button,fun_save_csv,sweep_button_function
 
 
@@ -93,11 +93,15 @@ class AddNewProp(QWidget):
         self.add_element_container = QWidget()
         self.add_element_layout = QGridLayout(self.add_element_container)
 
+        ## Container to add blends 
+        self.blend_container = QWidget() 
+        self.blend_layout = QGridLayout(self.blend_container)
+
         # Widget to add element letter , like C for carbon
         self.add_element_letter = QLineEdit()
         self.add_element_letter.setMaximumWidth(80)
 
-        # Widget to add number of elements
+        # Widget to add number of atoms of an element
         self.add_element_num = QDoubleSpinBox() 
         self.add_element_num.setDecimals(1)
         self.add_element_num.setMaximumWidth(80)
@@ -128,10 +132,13 @@ class AddNewProp(QWidget):
 
         # Add three buttons to add_prop_container      
         self.add_fuel = QPushButton("Add as fuel")
+        # self.add_fuel.setMaximumWidth(80)
         self.add_fuel.clicked.connect(self.construct_string)
         self.add_ox = QPushButton("Add as Oxidizer")
+        # self.add_ox.setMaximumWidth(80)
         self.add_ox.clicked.connect(self.construct_string)
         self.add_mono = QPushButton("Add as Monopropellant")
+        # self.add_mono.setMaximumWidth(80)
         self.add_mono.clicked.connect(self.construct_string)
         self.add_prop_layout.addWidget(self.add_fuel)
         self.add_prop_layout.addWidget(self.add_ox)
@@ -163,6 +170,7 @@ class AddNewProp(QWidget):
         self.layout.addRow("Enter density in g/cc (optional)",self.prop_rho)
         self.layout.addRow(self.add_element_container)
         self.layout.addRow(self.add_prop_container)
+        AddPropCombo(self)
 
 
         self.element_name_list = [] # List of newly created element symbols
@@ -170,6 +178,10 @@ class AddNewProp(QWidget):
         self.element_name_list.append(self.add_element_letter)
         self.element_num_list.append(self.add_element_num)
         self.element_row_counter = 1 # Tracker for number of elements created
+
+        self.blend_name_list = [] # List of newly created components to add to blend 
+        self.blend_percent_list = [] # List of newly created components' wt %
+        self.blend_counter = 0 # Tracker for number of components of a blend
     
     def add_element_func(self):
         self.element_row_counter = self.element_row_counter + 1 
@@ -252,6 +264,7 @@ class AddNewProp(QWidget):
         current_list_fuel = [self.bi_tab.FuBox.itemText(i) for i in range(self.bi_tab.FuBox.count())]
         current_list_mono_prop = [self.mono_tab.mono_prop_box.itemText(i) for i in range(self.mono_tab.mono_prop_box.count())]
         new_prop_add(self.custom_prop_name,final_str,ch)
+        print(final_str)
         if ch == 1:
             if self.custom_prop_name not in current_list_mono_prop:
                 self.mono_tab.mono_prop_box.addItem(self.custom_prop_name)
@@ -262,4 +275,79 @@ class AddNewProp(QWidget):
             if self.custom_prop_name not in current_list_fuel:
                 self.bi_tab.FuBox.addItem(self.custom_prop_name)
         
-        # print(final_str)
+    def  helper_add_blend(self):
+        blend_type_string = self.blend_options.currentText() 
+        
+        #self.blend_counter = self.blend_counter + 1
+       
+        
+        
+        if blend_type_string == "Fuel Blend":
+            current_list_fu = [self.bi_tab.FuBox.itemText(i) for i in range(self.bi_tab.FuBox.count())]
+            self.fuel_dropdown = QComboBox()
+            self.fuel_dropdown.addItems(current_list_fu)
+            
+            self.fuel_percentage = QDoubleSpinBox()
+            self.fuel_percentage.setDecimals(2)
+            self.fuel_percentage.setRange(0,100)
+            self.blend_layout.addWidget(self.fuel_dropdown,self.blend_counter,0,Qt.AlignmentFlag.AlignHCenter)
+            self.blend_layout.addWidget(self.fuel_percentage,self.blend_counter,1,Qt.AlignmentFlag.AlignHCenter)
+            self.group_layout.addWidget(self.blend_container)
+            self.blend_name_list.append(self.fuel_dropdown)
+            self.blend_percent_list.append(self.fuel_percentage)
+            self.blend_counter = self.blend_counter + 1 
+
+        if blend_type_string == "Oxidizer Blend":
+            current_list_ox = [self.bi_tab.OxBox.itemText(i) for i in range(self.bi_tab.OxBox.count())]
+            self.ox_dropdown = QComboBox()
+            self.ox_dropdown.addItems(current_list_ox)
+            self.ox_percentage = QDoubleSpinBox()
+            self.ox_percentage.setDecimals(2)
+            self.ox_percentage.setRange(0,100)
+            self.blend_layout.addWidget(self.ox_dropdown,self.blend_counter,0,Qt.AlignmentFlag.AlignHCenter)
+            self.blend_layout.addWidget(self.ox_percentage,self.blend_counter,1,Qt.AlignmentFlag.AlignHCenter)
+            self.group_layout.addWidget(self.blend_container)
+            self.blend_name_list.append(self.ox_dropdown)
+            self.blend_percent_list.append(self.ox_percentage)
+            self.blend_counter = self.blend_counter + 1
+
+        if blend_type_string == "Monopropellant Blend":
+            current_list_monoprop = [self.mono_tab.mono_prop_box.itemText(i) for i in range(self.mono_tab.mono_prop_box.count())]
+            self.mono_dropdown = QComboBox()
+            self.mono_dropdown.addItems(current_list_monoprop)
+            self.mono_percentage = QDoubleSpinBox() 
+            self.mono_percentage.setDecimals(2)
+            self.mono_percentage.setRange(0,100)
+            self.blend_layout.addWidget(self.mono_dropdown,self.blend_counter,0,Qt.AlignmentFlag.AlignHCenter)
+            self.blend_layout.addWidget(self.mono_percentage,self.blend_counter,1,Qt.AlignmentFlag.AlignHCenter)
+            self.group_layout.addWidget(self.blend_container)
+            self.blend_name_list.append(self.mono_dropdown)
+            self.blend_percent_list.append(self.mono_percentage)
+            self.blend_counter = self.blend_counter + 1
+            
+            
+
+    def helper_del_blend(self):
+        if self.blend_counter > 0:
+            self.blend_counter = self.blend_counter - 1
+        
+        deleted_element = self.blend_name_list.pop()
+        deleted_element_num = self.blend_percent_list.pop()
+
+        self.blend_layout.removeWidget(deleted_element)
+        deleted_element.deleteLater()
+        self.blend_layout.removeWidget(deleted_element_num)
+        deleted_element_num.deleteLater()
+
+    
+    def on_blend_changed(self):
+        # Reset the counter 
+        self.blend_counter = 0
+
+
+        # All the widget objects for storing propellant and weight percentage are deleted 
+        while self.blend_layout.count(): 
+            item = self.blend_layout.takeAt(0) # Returns the first widget's QLayoutWrapper (the actual widget object sits inside this wrapper)
+            widget = item.widget() # Returns the actual widget object
+            if widget is not None:
+                widget.deleteLater() 

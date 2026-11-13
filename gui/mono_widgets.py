@@ -1,5 +1,5 @@
 
-from PySide6.QtWidgets import QWidget, QComboBox, QPushButton, QDoubleSpinBox, QRadioButton,QLabel,QVBoxLayout,QGroupBox,QHBoxLayout,QGridLayout
+from PySide6.QtWidgets import QWidget, QComboBox, QPushButton, QDoubleSpinBox, QRadioButton,QLabel,QVBoxLayout,QGroupBox,QHBoxLayout,QGridLayout,QGroupBox
 
 from solver.propellants_list import MONOPROPS,OXIDIZERS,FUELS
 
@@ -191,7 +191,44 @@ def output_box_widgets(self):
 
 
 
+def AddPropCombo(self):
+    
+    
+    self.group_container = QGroupBox("Create a Propellant Blend")
+    self.group_layout = QVBoxLayout(self.group_container)
+    self.group_container.setMaximumWidth(320)
 
+    self.group_container_small = QWidget()
+    self.group_layout_small = QHBoxLayout(self.group_container_small)
 
+    self.mini_container = QWidget()
+    self.mini_layout = QVBoxLayout(self.mini_container)
 
+    self.Prop_Label = QLabel("Select Blend Type")
+    self.blend_options = QComboBox()
+    self.blend_options.addItems(['Fuel Blend','Oxidizer Blend','Monopropellant Blend'])
+    self.blend_options.currentTextChanged.connect(self.on_blend_changed)
+    # self.blend_options.setMaximumWidth(120)
+    self.mini_layout.addWidget(self.Prop_Label)
+    self.mini_layout.addWidget(self.blend_options)
 
+    self.button_1 = QPushButton("ADD")
+    
+    self.button_1.setMaximumWidth(60)
+    font_button_1 = self.button_1.font() 
+    # font_button_1.setPointSize(15)
+    font_button_1.setBold(False)
+    self.button_1.setFont(font_button_1)
+    self.button_1.clicked.connect(self.helper_add_blend)
+    
+    self.button_2 = QPushButton("DEL")
+    self.button_2.setMaximumWidth(60)
+    self.button_2.setFont(font_button_1)
+    self.button_2.clicked.connect(self.helper_del_blend)
+
+    self.group_layout_small.addWidget(self.mini_container)
+    self.group_layout_small.addWidget(self.button_1)
+    self.group_layout_small.addWidget(self.button_2)
+    # self.group_layout.addWidget(self.button_3)
+    self.group_layout.addWidget(self.group_container_small)
+    self.layout.addRow(self.group_container)
