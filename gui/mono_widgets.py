@@ -207,12 +207,14 @@ def AddPropCombo(self):
     self.Prop_Label = QLabel("Select Blend Type")
     self.blend_options = QComboBox()
     self.blend_options.addItems(['Fuel Blend','Oxidizer Blend','Monopropellant Blend'])
+    self.blend_options.setToolTip("Select the type of propellant blend that you want to create. Requires atleast two components. All component percentages have to add up to 100%")
     self.blend_options.currentTextChanged.connect(self.on_blend_changed)
     # self.blend_options.setMaximumWidth(120)
     self.mini_layout.addWidget(self.Prop_Label)
     self.mini_layout.addWidget(self.blend_options)
 
     self.button_1 = QPushButton("ADD")
+    self.button_1.setToolTip("Click to add a component of your blend and enter its corresponding percentage composition")
     
     self.button_1.setMaximumWidth(60)
     font_button_1 = self.button_1.font() 
@@ -222,9 +224,15 @@ def AddPropCombo(self):
     self.button_1.clicked.connect(self.helper_add_blend)
     
     self.button_2 = QPushButton("DEL")
+    self.button_2.setToolTip("Click to delete a blend component")
     self.button_2.setMaximumWidth(60)
     self.button_2.setFont(font_button_1)
     self.button_2.clicked.connect(self.helper_del_blend)
+
+    self.button_3 = QPushButton("Add blend to database")
+    self.button_3.setMaximumWidth(250)
+    self.button_3.setToolTip("The blended propellant will be added to the fuel, oxidizer or monopropellant database, accessible from monopropellant or bipropellant window")
+    self.button_3.clicked.connect(self.helper_on_add_blend)
 
     self.group_layout_small.addWidget(self.mini_container)
     self.group_layout_small.addWidget(self.button_1)
@@ -232,3 +240,8 @@ def AddPropCombo(self):
     # self.group_layout.addWidget(self.button_3)
     self.group_layout.addWidget(self.group_container_small)
     self.layout.addRow(self.group_container)
+    button_row = QHBoxLayout()
+    button_row.addStretch()
+    button_row.addWidget(self.button_3)
+    button_row.addStretch()
+    self.layout.addRow(button_row)

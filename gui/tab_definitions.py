@@ -1,13 +1,13 @@
 import sys
 from PySide6.QtWidgets import QWidget, QFormLayout, QComboBox, QMessageBox,QPushButton, QDoubleSpinBox, QRadioButton, QLineEdit,QLabel,QVBoxLayout,QGridLayout,QGroupBox,QHBoxLayout,QDialog
 from PySide6.QtCore import Qt
-from solver.calc_engine import compute_val,mono_prop_compute_val,new_prop_add
+from solver.calc_engine import compute_val,mono_prop_compute_val,new_prop_add,retrieve_card
 from solver.propellants_list import OXIDIZERS,FUELS,MONOPROPS
 from solver.data_class_custom import CalcSet,ChoiceSet
 #from gui.secondary_dialog_boxes import AddExtraOutputs,OutputDisplayTab
 from gui.mono_widgets import drop_down_widgets, button_widgets, input_box_widgets, output_box_widgets, radio_widgets,button_widget_set_2,AddPropCombo
-from gui.helpers import set_field_visibility,add_output_func,exit_radio_control_function,mono_func_button,create_add_output,func_button,fun_save_csv,sweep_button_function
-
+from gui.helpers import set_field_visibility,add_output_func,exit_radio_control_function,mono_func_button,create_add_output,func_button,fun_save_csv,sweep_button_function, update_weight_percentage,split_components,count_keyword_occurrences
+from gui.helpers import get_weight_percentages
 
 class BiPropTab(QWidget):
 
@@ -264,7 +264,7 @@ class AddNewProp(QWidget):
         current_list_fuel = [self.bi_tab.FuBox.itemText(i) for i in range(self.bi_tab.FuBox.count())]
         current_list_mono_prop = [self.mono_tab.mono_prop_box.itemText(i) for i in range(self.mono_tab.mono_prop_box.count())]
         new_prop_add(self.custom_prop_name,final_str,ch)
-        print(final_str)
+        
         if ch == 1:
             if self.custom_prop_name not in current_list_mono_prop:
                 self.mono_tab.mono_prop_box.addItem(self.custom_prop_name)
@@ -330,6 +330,8 @@ class AddNewProp(QWidget):
     def helper_del_blend(self):
         if self.blend_counter > 0:
             self.blend_counter = self.blend_counter - 1
+        else:
+            return
         
         deleted_element = self.blend_name_list.pop()
         deleted_element_num = self.blend_percent_list.pop()
@@ -351,3 +353,62 @@ class AddNewProp(QWidget):
             widget = item.widget() # Returns the actual widget object
             if widget is not None:
                 widget.deleteLater() 
+
+    
+    def helper_on_add_blend(self):
+
+        if self.blend_counter < 2: 
+            QMessageBox.warning(self,"Insufficient Inputs","You need atleast two components to create a blend")
+            return
+
+        percent_list =    [self.blend_percent_list[i].value() for i in range(len(self.blend_percent_list))]
+        blend_percent_sum = sum(percent_list)
+
+        if blend_percent_sum != 100: 
+            QMessageBox.warning(self,"Check Inputs","The Propellant percentages should add to 100%")
+            return
+        if self.blend_options.currentText() == "Fuel Blend":
+            ch = 3
+        elif self.blend_options.currentText() == "Oxidizer Blend":
+            ch = 2
+        else:
+            ch = 1 
+
+        # Update wt. percentage 
+        count = 0
+        final_card = []
+        for item in self.blend_name_list: 
+            name_str = item.currentText()
+            card = retrieve_card(name_str,ch)
+            card = " ".join(card)
+            if ch == 1: 
+                target = "name"
+            elif ch == 2:
+                target = "oxid"
+            elif ch == 3:
+                target = "fuel"
+            key_count = count_keyword_occurrences(card,target)
+            if key_count > 1: 
+                mod_component = []
+                component_list = split_components(card,target)
+                for component in component_list:
+                    wt_perc = get_weight_percentages(component)
+                    wt_perc_updated = wt_perc[0]*(1/100) * percent_list[count] 
+                    updated_component= update_weight_percentage(component,wt_perc_updated)
+                    updated_component = updated_component + " "
+                    mod_component.append(updated_component)
+                final_card.extend(mod_component)
+            else:
+                updated_card = update_weight_percentage(card,percent_list[count])
+                updated_card = updated_card + " "
+                final_card.append(updated_card)
+
+
+
+            # updated_card = update_weight_percentage(card,percent_list[count])
+            # updated_card = updated_card + " "
+            # final_card.append(updated_card)
+            count = count + 1
+        final_card = "\n".join(final_card)
+        print(final_card)
+        

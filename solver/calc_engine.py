@@ -1,5 +1,5 @@
 from dataclasses import replace
-from rocketcea.cea_obj import CEA_Obj, add_new_fuel, add_new_oxidizer, add_new_propellant
+from rocketcea.cea_obj import CEA_Obj, add_new_fuel, add_new_oxidizer, add_new_propellant, fuelCards, oxCards,propCards
 from solver.data_class_custom import CalcSet,ChoiceSet
 
 
@@ -10,7 +10,17 @@ def new_prop_add(name_str,card_st,ch):
         add_new_oxidizer(name_str,card_st)
     if ch == 3: 
         add_new_fuel(name_str,card_st)
-        
+
+def retrieve_card(name_str,ch):
+    if ch == 1:
+        return propCards[name_str]
+    elif ch == 2:
+        return oxCards[name_str]
+    elif ch == 3: 
+        return fuelCards[name_str] 
+
+
+
 # Define calculation function 
 def compute_val(calc: CalcSet, calc_ch:ChoiceSet): 
     """Return calculated results without modifying the supplied inputs.

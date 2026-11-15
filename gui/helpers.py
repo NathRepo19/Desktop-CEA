@@ -8,6 +8,7 @@ from gui.output_options import var_mapping
 from dataclasses import asdict, dataclass
 from pathlib import Path
 import csv
+import re 
 
 # NOTE: Helper functions that are added as functions to buttons and radio widgets etc. 
 ## NOTE 2: If a function definition has a mono_ pre-fix, it means that the helper function is different for monoprop and biprop implementation 
@@ -252,4 +253,83 @@ def fun_save_csv(self):
     self.Calc_button_3.setEnabled(False)
 
 
+# Function to change the wt % of a prop_card string 
 
+def update_weight_percentage(config_string, new_wt):
+    """
+    Takes a RocketCEA configuration string and updates the wt% value.
+    """
+    # RocketCEA cards use both 'wt%=50.' and 'wt% 50.' (including A50).
+    pattern = r"\bwt%(?:\s*=\s*|\s+)\S+"
+    replacement = f"wt%={new_wt}"
+    
+    # Substitute the old wt% with the new one
+    updated_string = re.sub(pattern, replacement, config_string, flags=re.IGNORECASE)
+    return updated_string
+
+# Counts how many components there are in the blend 
+def count_keyword_occurrences(text,target):
+    valid_targets = {"fuel", "oxid", "name"}
+    target_clean = target.strip().lower()
+
+    if target_clean not in valid_targets:
+        raise ValueError(f"Invalid target '{target}'. Expected one of: {', '.join(valid_targets)}.")
+
+    # \b ensures we only match whole words (e.g., won't match 'oxidize' when searching 'oxid')
+    pattern = rf"\b{re.escape(target_clean)}\b"
+    matches = re.findall(pattern, text, flags=re.IGNORECASE)
+    
+    return len(matches)
+
+
+def split_components(text: str, target: str) -> list[str]:
+    """
+    Splits a string with multiple occurrences of 'target' ('fuel', 'oxid', or 'name')
+    into separate component strings, standardizing each entry to start with '<target> '.
+    """
+    valid_targets = {"fuel", "oxid", "name"}
+    target_clean = target.strip().lower()
+
+    if target_clean not in valid_targets:
+        raise ValueError(f"Invalid target '{target}'. Expected one of: {', '.join(valid_targets)}.")
+
+    # Check if the target keyword appears more than once as a whole word
+    pattern_word = rf"\b{re.escape(target_clean)}\b"
+    matches = re.findall(pattern_word, text, flags=re.IGNORECASE)
+    if len(matches) <= 1:
+        return [text.strip()]
+
+    # Split at each target keyword, consuming optional '=' and surrounding spaces
+    split_pattern = rf"\b{re.escape(target_clean)}\s*=?\s*"
+    parts = re.split(split_pattern, text, flags=re.IGNORECASE)
+    
+    components = []
+    for part in parts:
+        cleaned = part.strip()
+        # Remove trailing 'L' or similar end-of-block marker if present
+        cleaned = re.sub(r"\s+L$", "", cleaned)
+        
+        if cleaned:
+            # Prepend the standardized target keyword to each component string
+            components.append(f"{target_clean} {cleaned}")
+            
+    return components
+
+
+
+def get_weight_percentages(card):
+    """Return each explicit wt% as a float, in card order.
+
+    Accept a fuel, oxidizer, or propellant card as a string or a list of
+    lines (such as fuelCards["A50"]). Values stay in percent units:
+    wt%=60.00 returns [60.0], not [0.6]. Blends return multiple values.
+    Raise ValueError if no wt% is present or a value is not numeric.
+    """
+    if not isinstance(card, str):
+        card = "\n".join(card)
+
+    values = re.findall(r"\bwt%(?:\s*=\s*|\s+)(\S+)", card, flags=re.IGNORECASE)
+    if not values:
+        raise ValueError("The card does not contain an explicit wt% value.")
+
+    return [float(value) for value in values]
