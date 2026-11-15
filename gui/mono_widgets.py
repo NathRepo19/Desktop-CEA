@@ -1,5 +1,5 @@
 
-from PySide6.QtWidgets import QWidget, QComboBox, QPushButton, QDoubleSpinBox, QRadioButton,QLabel,QVBoxLayout,QGroupBox,QHBoxLayout,QGridLayout,QGroupBox
+from PySide6.QtWidgets import QWidget, QComboBox, QPushButton, QDoubleSpinBox, QRadioButton,QLabel,QVBoxLayout,QGroupBox,QHBoxLayout,QGridLayout,QGroupBox,QLineEdit
 
 from solver.propellants_list import MONOPROPS,OXIDIZERS,FUELS
 
@@ -204,12 +204,16 @@ def AddPropCombo(self):
     self.mini_container = QWidget()
     self.mini_layout = QVBoxLayout(self.mini_container)
 
+    self.blend_name_label = QLabel("Enter blend name")
+    self.blend_name_input  = QLineEdit()
     self.Prop_Label = QLabel("Select Blend Type")
     self.blend_options = QComboBox()
     self.blend_options.addItems(['Fuel Blend','Oxidizer Blend','Monopropellant Blend'])
     self.blend_options.setToolTip("Select the type of propellant blend that you want to create. Requires atleast two components. All component percentages have to add up to 100%")
     self.blend_options.currentTextChanged.connect(self.on_blend_changed)
     # self.blend_options.setMaximumWidth(120)
+    self.mini_layout.addWidget(self.blend_name_label)
+    self.mini_layout.addWidget(self.blend_name_input)
     self.mini_layout.addWidget(self.Prop_Label)
     self.mini_layout.addWidget(self.blend_options)
 

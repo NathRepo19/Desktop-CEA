@@ -410,5 +410,21 @@ class AddNewProp(QWidget):
             # final_card.append(updated_card)
             count = count + 1
         final_card = "\n".join(final_card)
-        print(final_card)
+        #print(final_card)
+        custom_blend_name = self.blend_name_input.text().strip()
+        current_list_ox = [self.bi_tab.OxBox.itemText(i) for i in range(self.bi_tab.OxBox.count())]
+        current_list_fuel = [self.bi_tab.FuBox.itemText(i) for i in range(self.bi_tab.FuBox.count())]
+        current_list_mono_prop = [self.mono_tab.mono_prop_box.itemText(i) for i in range(self.mono_tab.mono_prop_box.count())]
+        new_prop_add(custom_blend_name,final_card,ch)
+        
+        if ch == 1:
+            if custom_blend_name not in current_list_mono_prop:
+                self.mono_tab.mono_prop_box.addItem(custom_blend_name)
+        elif ch == 2:
+            if custom_blend_name not in current_list_ox:
+                self.bi_tab.OxBox.addItem(custom_blend_name)
+        elif ch == 3: 
+            if custom_blend_name not in current_list_fuel:
+                self.bi_tab.FuBox.addItem(custom_blend_name)
+        
         
