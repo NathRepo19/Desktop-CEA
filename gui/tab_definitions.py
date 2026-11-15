@@ -343,17 +343,21 @@ class AddNewProp(QWidget):
 
     
     def on_blend_changed(self):
-        # Reset the counter 
+        # Reset counter and widget lists 
         self.blend_counter = 0
-
-
+        self.blend_percent_list = []
+        self.blend_name_list = []
+  
         # All the widget objects for storing propellant and weight percentage are deleted 
         while self.blend_layout.count(): 
             item = self.blend_layout.takeAt(0) # Returns the first widget's QLayoutWrapper (the actual widget object sits inside this wrapper)
             widget = item.widget() # Returns the actual widget object
             if widget is not None:
                 widget.deleteLater() 
+        # self.blend_container = QWidget()
+        # self.blend_layout = QGridLayout(self.blend_container)
 
+        
     
     def helper_on_add_blend(self):
 
