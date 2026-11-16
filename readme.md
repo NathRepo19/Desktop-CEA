@@ -2,10 +2,10 @@
 
 Desktop CEA is a graphical interface for rocket chemical equilibrium calculations, powered by RocketCEA.
 
-<a href="Images/screenshot_1.png">
-  <img src="Images/screenshot_1.png"
-       alt="Desktop CEA showing an O/F parameter sweep and specific impulse plot"
-       width="1000">
+<a href="Images/screenshot_1_new.png">
+  <img src="Images/screenshot_1_new.png"
+       alt="Desktop CEA showing bipropellant inputs and an O/F parameter sweep with a characteristic velocity plot"
+       width="1010">
 </a>
 
 ## Download for Windows
@@ -20,6 +20,7 @@ Desktop CEA is a graphical interface for rocket chemical equilibrium calculation
 * Calculate specific impulse, characteristic velocity, flame temperature and other parameters as a function of propellant type, chamber pressure, ambient pressure and exit conditions
 * Both monopropellant and bipropellant calculations are available
 * Perform a parameter sweep to calculate propulsion parameters over a range of O/F (oxidizer to fuel mass ratio), chamber pressure or nozzle exit area ratio
+* Define custom propellants and propellant blends to use for calculations
 * Plot results in the GUI and find the maximum value within a parameter sweep
 * Export individual calculations and parameter sweeps as CSV files, and save plots as PNG images
 
