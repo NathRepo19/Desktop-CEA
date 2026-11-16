@@ -8,7 +8,7 @@ This guide explains how to use Desktop CEA. It will be updated as the applicatio
 - Keep the executable in a dedicated folder to make the application and its output files easier to find. Exports are saved in a `Results (Desktop_CEA)` subfolder of the application's working directory.
 - Double-click the executable to launch the application.
 
-Click any screenshot below to view it at full size.
+Click any screenshot below to view it at full size. Small screenshots are displayed at their original pixel width to keep interface text sharp.
 
 ## Running a Basic Calculation
 
@@ -16,8 +16,8 @@ Click any screenshot below to view it at full size.
 
 Choose the **Monopropellant** or **Bipropellant** tab. The example below uses the **Bipropellant** tab.
 
-<a href="../Images/screenshot_2_opening.png">
-  <img src="../Images/screenshot_2_opening.png"
+<a href="../Images/screenshot_2_opening_new.png">
+  <img src="../Images/screenshot_2_opening_new.png"
       alt="Desktop CEA opening screen"
       width="360">
 </a>
@@ -28,10 +28,10 @@ Choose the **Monopropellant** or **Bipropellant** tab. The example below uses th
 
 Select an oxidizer and fuel from the drop-down menus for a bipropellant calculation, or a single propellant for a monopropellant calculation.
 
-<a href="../Images/screenshot_4_select_prop.png">
-  <img src="../Images/screenshot_4_select_prop.png"
+<a href="../Images/screenshot_4_select_prop_new.png">
+  <img src="../Images/screenshot_4_select_prop_new.png"
       alt="Select Propellant Screen"
-      width="360">
+      width="356">
 </a>
 
 *Drop-down menu showing different fuel options*
@@ -40,10 +40,12 @@ Select an oxidizer and fuel from the drop-down menus for a bipropellant calculat
 
 Enter the O/F (oxidizer-to-fuel mass) ratio for a bipropellant calculation, chamber pressure, and ambient pressure. Chamber and ambient pressures are entered in **bar**. Choose either a nozzle area ratio or a nozzle exit pressure in **Pa**.
 
+To reproduce the basic calculation below, select **90_H2O2** and **Kerosene**, then enter an **O/F ratio of 2.50**, **chamber pressure of 20 bar**, **ambient pressure of 1 bar**, and **nozzle area ratio of 40**. Keep **Equilibrium upto exit** selected.
+
 <a href="../Images/screenshot_5_inputs.png">
   <img src="../Images/screenshot_5_inputs.png"
       alt="Enter input conditions"
-      width="360">
+      width="353">
 </a>
 
 *Enter input conditions in the corresponding boxes and choose exit conditions (nozzle area ratio or exit pressure)*
@@ -52,10 +54,10 @@ Enter the O/F (oxidizer-to-fuel mass) ratio for a bipropellant calculation, cham
 
 Click **Calculate**. The results will appear below the button.
 
-<a href="../Images/screenshot_3_basic_calc.png">
-  <img src="../Images/screenshot_3_basic_calc.png"
+<a href="../Images/screenshot_3_basic_calc_new.png">
+  <img src="../Images/screenshot_3_basic_calc_new.png"
       alt="Simple Calculation Results"
-      width="360">
+      width="356">
 </a>
 
 *Results for hydrogen peroxide (90% concentration) and kerosene*
@@ -83,7 +85,7 @@ Choose a solver mode above the **Select Additional Outputs** button.
 <a href="../Images/screenshot_6_solver_settings.png">
   <img src="../Images/screenshot_6_solver_settings.png"
        alt="Solver mode options in the main window"
-       width="360">
+       width="354">
 </a>
 
 *Choose equilibrium expansion or freeze the gas composition at the throat or chamber.*
@@ -128,7 +130,7 @@ The O/F value in the main window is replaced by the sweep values. Sweeps use the
 <a href="../Images/screenshot_9_input_sweep.png">
   <img src="../Images/screenshot_9_input_sweep.png"
        alt="Main window inputs for the hydrogen peroxide and kerosene O/F sweep"
-       width="360">
+       width="347">
 </a>
 
 *Set the fixed input conditions before opening the sweep dialog.*
@@ -172,7 +174,7 @@ After computing, the **Y-Axis** drop-down lists the default outputs and any addi
 <a href="../Images/screenshot_12_plot_options.png">
   <img src="../Images/screenshot_12_plot_options.png"
        alt="Y-Axis drop-down listing the outputs available for plotting"
-       width="720">
+       width="360">
 </a>
 
 *Choose an output to plot against the O/F ratio.*
@@ -194,7 +196,7 @@ Click **Find Maxima** to mark and annotate the peak of the selected output. In t
 <a href="../Images/screenshot_13_peak.png">
   <img src="../Images/screenshot_13_peak.png"
        alt="Plot annotated with a peak vacuum specific impulse of 317.26 seconds at an O/F ratio of 8.04"
-       width="720">
+       width="800">
 </a>
 
 *The peak identified in the computed sweep.*
@@ -209,3 +211,107 @@ Click **Find Maxima** to mark and annotate the peak of the selected output. In t
 Both files are saved in the `Results (Desktop_CEA)` subfolder of the application's working directory. Save the graph after plotting and adding any peak annotation you want to keep.
 
 **Note:** Save sweep data before computing another sweep if you want to keep it. Use a different filename for each export to avoid overwriting an existing file.
+
+### 4. Add a custom propellant
+
+Use this feature to define a propellant from its composition and thermodynamic inputs. You will need:
+
+- A propellant name and chemical formula.
+- Element symbols and the number of atoms of each element.
+- Formation enthalpy in **cal/mol** at the reference temperature.
+- Reference temperature in **K** (298.15 K by default).
+- Density in **g/cc** (optional).
+
+#### a. Open the custom propellant tab
+
+Click the **Add Custom Propellant** tab in the main window.
+
+#### b. Enter the name, formula, and thermodynamic inputs
+
+For the butane example shown below, enter **butane** as the name, **C4H10** as the chemical formula, **-30186.42 cal/mol** as the formation enthalpy, and **298.00 K** as the reference temperature. Leave density at **0.00 g/cc** to omit this optional input.
+
+#### c. Enter the element symbols and atom counts
+
+Enter **C** and **4** in the first element row. Click **ADD** once to create a second row, then enter **H** and **10**. Element symbols go on the left and atom counts on the right. For other propellants, use **ADD** to create more rows and **DEL** to remove the last row.
+
+<a href="../Images/screenshot_14_butane_new.png">
+  <img src="../Images/screenshot_14_butane_new.png"
+       alt="Screenshot showing populated input fields for adding butane as a custom fuel"
+       width="358">
+</a>
+
+*Butane composition and thermodynamic inputs.*
+
+#### d. Add the propellant
+
+Click **Add as fuel** to add butane to the fuel drop-down in the **Bipropellant** tab. To register a custom oxidizer or monopropellant instead, use **Add as Oxidizer** or **Add as Monopropellant**.
+
+#### e. Use your new propellant
+
+Return to the **Bipropellant** tab. The new fuel, **butane**, appears at the end of the fuel drop-down.
+
+<a href="../Images/screenshot_15_butane_added_new.png">
+  <img src="../Images/screenshot_15_butane_added_new.png"
+       alt="Screenshot showing newly-added butane in the drop-down menu within the bipropellant tab"
+       width="355">
+</a>
+
+*The custom fuel is now available for selection.*
+
+Select **butane** as the fuel and **AIR** as the oxidizer. Set the **O/F ratio to 2.50**, **chamber pressure to 20 bar**, **ambient pressure to 1 bar**, and **nozzle area ratio to 40**. Select **Equilibrium upto exit**, then click **Calculate**.
+
+<a href="../Images/screenshot_16_butane_calc_basic_new.png">
+  <img src="../Images/screenshot_16_butane_calc_basic_new.png"
+       alt="Screenshot showing calculated values for butane"
+       width="358">
+</a>
+
+*Calculated results for butane and air at the specified conditions.*
+
+### 5. Add a custom blend
+
+Create a blend from two or more propellants using percentages by mass. The component percentages must add up to **100%**.
+
+#### a. Enter a blend name
+
+Open the **Add Custom Propellant** tab and find the **Create a Propellant Blend** section. Enter **butane_h2** as the blend name. This example uses **90% butane** and **10% gaseous hydrogen** by mass. Add butane as a fuel using the steps above before creating this blend.
+
+#### b. Select the blend type
+
+Choose **Fuel Blend** from **Select Blend Type**. The other options are **Oxidizer Blend** and **Monopropellant Blend**. Select the type before adding components; changing it clears the component rows.
+
+#### c. Add the components and percentages
+
+Click **ADD** twice in the blend section to create two component rows. In the first row, select **butane** and enter **90** in the percentage box on the right. In the second row, select **GH2** (gaseous hydrogen) and enter **10**. Use **DEL** to remove the last component row if needed.
+
+<a href="../Images/screenshot_17_butane_h2_blend_new.png">
+  <img src="../Images/screenshot_17_butane_h2_blend_new.png"
+       alt="Screenshot showing input values for butane-hydrogen fuel blend"
+       width="337">
+</a>
+
+*A fuel blend containing 90% butane and 10% gaseous hydrogen by mass.*
+
+#### d. Add the blend
+
+Click **Add blend to database**. The blend is now available as **butane_h2** in the fuel drop-down for the current application session.
+
+#### e. Use your new fuel blend
+
+Return to the **Bipropellant** tab, select **butane_h2** as the fuel and **AIR** as the oxidizer, and keep the same input conditions and solver mode as the butane calculation above. Click **Calculate**.
+
+<a href="../Images/screenshot_18_butane_h2_blend_calc_new.png">
+  <img src="../Images/screenshot_18_butane_h2_blend_calc_new.png"
+       alt="Screenshot showing calculation results with butane-hydrogen fuel blend"
+       width="357">
+</a>
+
+*Calculated results for the butane–hydrogen blend and air.*
+
+In the examples shown, vacuum specific impulse increases from **201.81 s** for butane to **220.68 s** for the blend containing 10% gaseous hydrogen by mass. This comparison applies to the specified inputs and solver mode; results will change with composition and calculation settings.
+
+## Current limitations
+
+- The rocket motor is modeled as an infinite-area combustor. A finite-area combustor model with a contraction area ratio input is not available.
+- Chemical species concentrations are not available in the interface.
+- Custom propellants and blends are stored only for the current application session. Add them again after restarting the application, including any custom components needed for a blend.
