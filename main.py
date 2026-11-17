@@ -5,14 +5,13 @@ from PySide6.QtWidgets import QApplication,QSplashScreen
 from PySide6.QtGui import QIcon,QPixmap
 from PySide6.QtCore import Qt,QSize
 
-from gui.gui_class import MainWindow
-
 ## Initialize the application, window and layout objects
 
 app = QApplication() 
 
-# Load the icon
-pixmap = QPixmap("icon.png")
+# Resolve bundled resources relative to this module, not the launch folder.
+icon_path = Path(__file__).resolve().with_name("icon.png")
+pixmap = QPixmap(str(icon_path))
 
 #Scale the icon
 pixmap = pixmap.scaled(
@@ -28,8 +27,10 @@ app.processEvents()
 
     
 
-app.setWindowIcon(QIcon(str(Path(__file__).resolve().with_name("icon.png"))))
+app.setWindowIcon(QIcon(str(icon_path)))
 
+# Load the application after painting the splash so it covers these imports.
+from gui.gui_class import MainWindow
 
 # Now the MainWindow contains two tabs
 window = MainWindow()
