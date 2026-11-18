@@ -52,5 +52,10 @@ Running Desktop CEA from source requires Python and these libraries:
 - **Matplotlib** - plotting and embedding charts in GUI
 
 The project also uses Python's built-in modules, including `pathlib`, `dataclasses`, `csv` and `copy`. These require no separate installation.
+To install all the Python libraries needed to run the applciation, run the following command: 
+
+```
+pip install -r requirements.txt
+```
 
 **The Windows executable bundles its dependencies and does not require a separate Python installation.**
